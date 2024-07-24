@@ -2,7 +2,7 @@ module.exports = {
     apps: [
       {
         name: 'fis-chatbot-persistence',
-        script: 'src/app.ts', // Ruta a tu archivo principal
+        script: 'src/index.ts', // Ruta a tu archivo principal
         interpreter: 'ts-node', // Usa ts-node como intérprete
         instances: 'max',
         autorestart: true,
