@@ -1,9 +1,11 @@
+const path = require('path');
+
 module.exports = {
     apps: [
       {
         name: 'fis-chatbot-persistence',
         script: 'src/index.ts', // Ruta a tu archivo principal
-        interpreter: 'ts-node', // Usa ts-node como intérprete
+        interpreter: path.resolve(__dirname, 'node_modules/.bin/ts-node'), // Usa ts-node como intérprete
         instances: 'max',
         autorestart: true,
         watch: false, // Opcional: habilita si quieres que PM2 reinicie la aplicación al detectar cambios
