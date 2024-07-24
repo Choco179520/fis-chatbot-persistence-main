@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Document {
+  id              Int         @id @default(autoincrement())
+  title           String
+  utterances      Json
+  response_set    ResponseSet @relation(fields: [response_set_id], references: [id], onDelete: Cascade)
+  response_set_id Int         @unique
+}
+
+model ResponseSet {
+  id        Int       @id @default(autoincrement())
+  responses Json
+  document  Document?
+}

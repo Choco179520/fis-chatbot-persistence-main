@@ -1,2 +1,2 @@
-# fis-chatbot-persistence-main
-Persistence chatbot fis
+# fis-chatbot-persistence
+Chatbot data persistence repository
