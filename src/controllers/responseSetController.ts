@@ -87,7 +87,7 @@ export const responseSetController = {
       const buffer = Buffer.from(image, "base64");
       const filePath = path.join(
         __dirname,
-        "./../../../fis-chatbot-api/static/images",
+        "./../../../fis-chatbot-api-main/static/images",
         nombre
       );
       console.log(filePath, 'filepath...');
