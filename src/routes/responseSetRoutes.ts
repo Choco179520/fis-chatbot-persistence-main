@@ -8,5 +8,6 @@ router.get('/response-sets', responseSetController.getResponseSet);
 router.get('/response-sets/:id', responseSetController.getResponseSetById);
 router.put('/response-sets/:id', responseSetController.updateResponseSetById);
 router.delete('/response-sets/:id', responseSetController.deleteResponseSetById);
+router.post('/post-image', responseSetController.postResponseImage);
 
 export default router;

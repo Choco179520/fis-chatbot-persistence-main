@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { responseSetService } from "../services/responseSetService";
+import { promises as fs } from "fs";
+import * as path from "path";
 
 export const responseSetController = {
   async createResponseSet(req: Request, res: Response): Promise<void> {
@@ -73,6 +75,24 @@ export const responseSetController = {
       } else {
         res.status(404).json({ error: "Response set not found" });
       }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  async postResponseImage(req: Request, res: Response): Promise<void> {
+    try {
+      const { image, nombre } = req.body;
+      const buffer = Buffer.from(image, "base64");
+      const filePath = path.join(
+        __dirname,
+        "./../../../fis-chatbot-api/static/images",
+        nombre
+      );
+      console.log(filePath, 'filepath...');
+      await fs.mkdir(path.dirname(filePath), { recursive: true });
+      return await fs.writeFile(filePath, buffer);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal Server Error" });
