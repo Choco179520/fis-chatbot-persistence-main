@@ -3,8 +3,8 @@ import requests
 import static.documents.documents
 import os
 
-# BASE_URL = "http://localhost:3000/api"
-BASE_URL = "https:/backend-chatbot-fis.hoptech.dev/chatbot-persistence/api"
+BASE_URL = "http://localhost:3000/api"
+# BASE_URL = "https:/backend-chatbot-fis.hoptech.dev/chatbot-persistence/api"
 local_documents = static.documents.documents.documents
 directorio = os.path.dirname(os.path.abspath(__file__))
 directorio_base = directorio + '/static/documents'

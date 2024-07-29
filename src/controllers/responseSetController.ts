@@ -84,7 +84,7 @@ export const responseSetController = {
   async postResponseImage(req: Request, res: Response): Promise<void> {
     try {
       const { image, nombre } = req.body;
-      const buffer = Buffer.from(image, "base64");
+      const buffer = Buffer.from(image, "base64");      
       const filePath = path.join(
         __dirname,
         "./../../../fis-chatbot-api-main/static/images",
