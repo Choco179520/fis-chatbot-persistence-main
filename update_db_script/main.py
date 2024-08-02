@@ -2,6 +2,8 @@ import asyncio
 import requests
 import static.documents.documents
 import os
+import json
+import sys
 
 BASE_URL = "http://localhost:3000/api"
 # BASE_URL = "https:/backend-chatbot-fis.hoptech.dev/chatbot-persistence/api"
@@ -88,15 +90,67 @@ def update_action_ids(document):
     update_response_set_by_id(response_set_id, new_responses)
 
 
-def create_dir_document(document): 
-    print(document, 'crear documento...')
-    print(directorio_base, " base...")
-    
-    for root, dirs, files in os.walk(directorio_base):
-        print(f"Directorio actual: {root}")
-        print(f"Subdirectorios: {dirs}")
-        print(f"Archivos: {files}")
+def create_dir_document(document, responses): 
+    path = directorio_base + '/others'
 
+    titleDoc = document["title"].replace(" ", "-")
+    titleDoc = titleDoc.lower()
+
+    titleDocu = titleDoc.replace("-", "_")
+
+    data = {
+        'id': titleDoc,
+        'title': document["title"],
+        'responses': responses,
+        'utterances':  document["utterances"]
+    }
+
+    data_json = json.dumps(data, indent=4)
+    data_string = f"{titleDocu} = {data_json}\n"
+
+    nombre_archivo = path + '/' + titleDocu + '.py'
+    with open(nombre_archivo, 'w') as file:
+        file.write(data_string)
+
+    rutaDoc = directorio_base + '/' + 'documents.py'
+
+    with open(rutaDoc, 'r') as archivoDocs:
+        contenido = archivoDocs.read()
+
+    nuevo_import = f'from static.documents.others.{titleDocu} import *\n'
+    nuevo_texto = f'{titleDocu},\n'
+    
+    if nuevo_import not in contenido:
+        # Agrega el nuevo import si no está ya presente
+        contenido = contenido.replace(f'# NUEVO_DOCUMENTO_IMPORT\n', nuevo_import + '# NUEVO_DOCUMENTO_IMPORT\n')
+
+    if nuevo_texto not in contenido:
+        # Agrega el nuevo texto a la lista si no está ya presente
+        index_lista = contenido.find('documents = [')
+        if index_lista != -1:
+            # Encuentra el final de la lista
+            index_final_lista = contenido.find(']', index_lista)
+            contenido = contenido[:index_final_lista] + '    ' + nuevo_texto + contenido[index_final_lista:]      
+        
+    # Escribe el contenido modificado de vuelta al archivo
+    with open(rutaDoc, 'w') as file:
+        file.write(contenido)
+    
+    print(f'Finaliza la creacion de un nuevo documento....')
+
+
+def obtener_title_de_json(texto):
+    try:
+        # Intenta parsear el texto como JSON
+        data = json.loads(texto)
+        # Accede al valor asociado a la clave 'title'
+        return data["title"]
+    except ValueError as e:
+        # Manejo de la excepción si el texto no es un JSON válido
+        return "El texto no es un JSON válido"
+    except KeyError as e:
+        # Manejo de la excepción si la clave 'title' no existe en el JSON
+        return "La clave 'title' no existe en el JSON"
 
 def compare_documents_responses(document):
     response_set_id = document.get("response_set_id")
@@ -106,7 +160,7 @@ def compare_documents_responses(document):
 
     if local_responses is None:
         print(f"No local responses found for document '{document['title']}'")
-        create_dir_document(document)
+        create_dir_document(document, db_responses)
         return
 
     for local_response, db_response in zip(local_responses, db_responses):
@@ -128,7 +182,6 @@ def compare_documents_responses(document):
             #         break
             updated_response_set = update_response_set_by_id(response_set_id, local_responses)
             print("Updating response:", updated_response_set.get("id"))
-
 
 if __name__ == "__main__":
     asyncio.run(load_documents_in_db())

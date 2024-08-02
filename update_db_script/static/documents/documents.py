@@ -9,6 +9,7 @@ from static.documents.enrollment.special_enrollment import *
 from static.documents.enrollment.extraordinary_enrollment import *
 from static.documents.default_answers.thanks import *
 from static.documents.default_answers.greetings import *
+# NUEVO_DOCUMENTO_IMPORT
 
 documents = [
     undergraduate_reentry_process,
@@ -48,4 +49,5 @@ documents = [
     thanks,
     english_acomplishment,
     admission_process,
+    # NUEVO_DOCUMENTO
 ]

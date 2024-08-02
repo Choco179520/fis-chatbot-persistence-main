@@ -34,9 +34,17 @@ export const responseSetService = {
     });
   },
 
-  async deleteeResponseSetById(id: number): Promise<ResponseSet | null> {
-    return await prisma.responseSet.delete({
-      where: { id },
-    });
+  async deleteeResponseSetById(
+    id: number
+  ): Promise<ResponseSet | null | undefined> {
+    try {
+      if (id) {
+        return await prisma.responseSet.delete({
+          where: { id },
+        });
+      }
+    } catch (error) {
+      throw new Error("No se pudo eliminar el registro..");
+    }
   },
 };
